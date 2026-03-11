@@ -17,6 +17,7 @@ def executar_robo():
         try:
             robo.iniciar_driver()
             robo.login()
+            time.sleep(5)
             arq_docas = robo.extrair_relatorio()
             if arq_docas:
                 logger.info(f"Sucesso: {arq_docas.name}")

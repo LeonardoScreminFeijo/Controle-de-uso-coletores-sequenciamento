@@ -26,6 +26,7 @@ class RoboNavegador:
         opcoes = Options()
         if HEADLESS:
             opcoes.add_argument("--headless=new")
+            
         
         opcoes.add_argument("--start-maximized")
         opcoes.add_argument("--disable-gpu")
@@ -36,6 +37,7 @@ class RoboNavegador:
             "download.prompt_for_download": False,
             "download.directory_upgrade": True,
             "safebrowsing.enabled": True
+            
         }
         opcoes.add_experimental_option("prefs", prefs)
 
@@ -43,10 +45,19 @@ class RoboNavegador:
         
         if not caminho_driver.exists():
             raise FileNotFoundError("chromedriver.exe não encontrado na raiz!")
-
+        
         servico = Service(executable_path=str(caminho_driver))
         self.driver = webdriver.Chrome(service=servico, options=opcoes)
-        self.logger.info("Navegador aberto.")
+        
+
+        if HEADLESS:
+            self.logger.info("Configurando permissões de download (Modo Headless)...")
+            self.driver.execute_cdp_cmd('Page.setDownloadBehavior', {
+                'behavior': 'allow',
+                'downloadPath': str(PASTA_DADOS.resolve())
+            })
+        opcoes.add_argument("--start-maximized")
+        opcoes.add_argument("--window-size=1920,1080")
 
     def fechar(self):
         if self.driver:
@@ -110,6 +121,9 @@ class RoboNavegador:
             )
 
             botao_status.click()
+
+            self.logger.info("Tirando foto da tela antes de clicar...")
+            self.driver.save_screenshot("debug_tela_invisivel.png")
             
             xpath_excel = '/html/body/div/form/div[2]/div[1]/button/span'
             
@@ -151,7 +165,6 @@ class RoboNavegador:
             campo_password = WebDriverWait(self.driver, 20).until(
                 EC.element_to_be_clickable((By.XPATH, xpath_password))
             )
-
             campo_password.click()
             campo_password.clear() 
             campo_password.send_keys(password)
