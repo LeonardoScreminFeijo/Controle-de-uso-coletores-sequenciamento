@@ -1,0 +1,6 @@
+.env
+logs/*
+!logs/.gitkeep
+relatorios/*
+!relatorios/.gitkeep
+chromedriver.exe
