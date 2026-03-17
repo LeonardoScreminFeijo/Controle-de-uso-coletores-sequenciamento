@@ -17,10 +17,9 @@ def executar_robo():
         try:
             robo.iniciar_driver()
             robo.login()
-            time.sleep(5)
-            arq_docas = robo.extrair_relatorio()
-            if arq_docas:
-                logger.info(f"Sucesso: {arq_docas.name}")
+            arq_rotas = robo.extrair_relatorio()
+            if arq_rotas:
+                logger.info(f"Sucesso: {arq_rotas.name}")
             else:
                 logger.error("Falha ao baixar.")
         except Exception as e:

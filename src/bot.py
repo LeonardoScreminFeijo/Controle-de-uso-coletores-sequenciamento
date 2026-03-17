@@ -51,7 +51,6 @@ class RoboNavegador:
         
 
         if HEADLESS:
-            self.logger.info("Configurando permissões de download (Modo Headless)...")
             self.driver.execute_cdp_cmd('Page.setDownloadBehavior', {
                 'behavior': 'allow',
                 'downloadPath': str(PASTA_DADOS.resolve())
@@ -136,7 +135,6 @@ class RoboNavegador:
 
             arquivo = self._aguardar_download()
             
-            # AQUI ACONTECE O RENOMEAR
             return self._renomear_arquivo(arquivo, "Sequenciamento CTB")
             
         except Exception as e:
